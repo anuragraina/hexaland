@@ -2,20 +2,20 @@ const mongoose = require('mongoose');
 
 //schema of individual node
 const nodeSchema = new mongoose.Schema({
-	name                  : {
+	name                     : {
 		type     : String,
 		required : true,
 		trim     : true
 	},
-	friends               : {
+	neighbours               : {
 		type : Map,
 		of   : String
 	},
-	friendsConnectingEdge : {
+	neighboursConnectingEdge : {
 		type : Map,
 		of   : String
 	},
-	clusterID             : {
+	clusterID                : {
 		type : mongoose.Schema.Types.ObjectId,
 		ref  : 'Node'
 	}
@@ -42,13 +42,13 @@ nodeSchema.statics.checkValidity = async ({ node1, edge1, node2, edge2 }) => {
 	}
 	// checking availability of that side of node1
 	if (foundNode1 !== null) {
-		if (foundNode1.friends.get(edge1Str)) {
+		if (foundNode1.neighbours.get(edge1Str)) {
 			throw `${node1} already connected at ${edge1}`;
 		}
 	}
 	// checking availability of side of node2
 	if (foundNode2 !== null) {
-		if (foundNode2.friends.get(edge2Str)) {
+		if (foundNode2.neighbours.get(edge2Str)) {
 			throw `${node2} already connected at ${edge2}`;
 		}
 	}

@@ -20,9 +20,9 @@ async function yo(node1, edge1, node2, edge2, arr) {
 		let presentNode = await Node.findOne({ name: presentNodeName });
 		let presentNodeNextEdge = (presentNodeEdge - 1 + 6) % 6;
 		presentNodeNextEdge = presentNodeNextEdge.toString();
-		let nextNodeName = presentNode.friends.get(presentNodeNextEdge);
+		let nextNodeName = presentNode.neighbours.get(presentNodeNextEdge);
 		if (nextNodeName) {
-			let nextNodeEdge = presentNode.friendsConnectingEdge.get(nextNodeName);
+			let nextNodeEdge = presentNode.neighboursConnectingEdge.get(nextNodeName);
 			nextNodeEdge = parseInt(nextNodeEdge);
 			let nextNodeNextEdge = (nextNodeEdge - 1 + 6) % 6;
 			newNodeEdge = parseInt(newNodeNextEdge);

@@ -4,8 +4,8 @@ const Node = require('../models/Node');
 async function deleteNode(name, arr) {
 	for (const [ val, key ] of arr) {
 		const foundNode = await Node.findOne({ name: val });
-		foundNode.friends.delete(key);
-		foundNode.friendsConnectingEdge.delete(name);
+		foundNode.neighbours.delete(key);
+		foundNode.neighboursConnectingEdge.delete(name);
 		await foundNode.save();
 	}
 	return await Node.deleteOne({ name });

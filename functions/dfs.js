@@ -10,7 +10,7 @@ const dfs = async (name, notVisit) => {
 		while (s.length > 0) {
 			const t = s.pop();
 			const foundNode = await Node.findOne({ name: t });
-			foundNode.friends.forEach((val, key) => {
+			foundNode.neighbours.forEach((val, key) => {
 				if (val != notVisit && !visited.has(val)) {
 					visited.add(val);
 					s.push(val);
