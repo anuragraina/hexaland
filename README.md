@@ -1,3 +1,4 @@
+## Description
 This is a full-stack MERN application.
 
 Hexaland is a ficticious country having hexagonal covid hotspots. The application primarly is used for adding and removing hotspots/clusters.
@@ -10,7 +11,7 @@ To setup the application, install required dependencies by running the following
 
 ### `npm install`
 
-Installs the required dependencies.
+Installs the required dependencies.<br />
 **Note: Enter the command twice, the current and then the client directory.**
 
 
@@ -22,6 +23,7 @@ Runs the app in the development mode.<br />
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 
+## Working
 
-
-
+Hotspots can be added with the "Add Hotspot button".<br />
+To delete a hotspot, simply click on hotspot in the cluster.
