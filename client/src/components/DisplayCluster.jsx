@@ -34,50 +34,54 @@ function DisplayCluster() {
 		axios.get('/api/hexaland').then((response) => {
 			//handle catch
 			const clusterData = Object.values(response.data);
-			let center = [ '', -1 ];
+			if (clusterData.length === 0) {
+				alert('No hotspot present!!!');
+			} else {
+				let center = [ '', -1 ];
 
-			const getNode = (nodeName) => {
+				const getNode = (nodeName) => {
+					for (const node of clusterData) {
+						if (node.name === nodeName) {
+							return node;
+						}
+					}
+				};
+
 				for (const node of clusterData) {
-					if (node.name === nodeName) {
-						return node;
+					const name = node.name;
+					const neighboursCount = Object.keys(node.neighbours).length;
+
+					if (neighboursCount > center[1]) {
+						center = [ name, neighboursCount ];
 					}
 				}
-			};
 
-			for (const node of clusterData) {
-				const name = node.name;
-				const neighboursCount = Object.keys(node.neighbours).length;
+				const coordinates = {
+					[center[0]]: [ 0, 0 ]
+				};
 
-				if (neighboursCount > center[1]) {
-					center = [ name, neighboursCount ];
+				const queue = [ center[0] ];
+				const visitedNodes = [ center[0] ];
+
+				while (queue.length !== 0) {
+					const nodeName = queue.shift();
+					const neighbours = Object.entries(getNode(nodeName).neighbours);
+					const [ baseX, baseY ] = coordinates[nodeName];
+
+					neighbours.forEach((neighbour) => {
+						if (!neighbour || visitedNodes.includes(neighbour[1])) {
+							return;
+						}
+
+						visitedNodes.push(neighbour[1]);
+						coordinates[neighbour[1]] = getCoordinates(baseX, baseY, parseInt(neighbour[0]));
+						queue.push(neighbour[1]);
+					});
 				}
+
+				console.log(coordinates);
+				setCluster(coordinates);
 			}
-
-			const coordinates = {
-				[center[0]]: [ 0, 0 ]
-			};
-
-			const queue = [ center[0] ];
-			const visitedNodes = [ center[0] ];
-
-			while (queue.length !== 0) {
-				const nodeName = queue.shift();
-				const neighbours = Object.entries(getNode(nodeName).neighbours);
-				const [ baseX, baseY ] = coordinates[nodeName];
-
-				neighbours.forEach((neighbour) => {
-					if (!neighbour || visitedNodes.includes(neighbour[1])) {
-						return;
-					}
-
-					visitedNodes.push(neighbour[1]);
-					coordinates[neighbour[1]] = getCoordinates(baseX, baseY, parseInt(neighbour[0]));
-					queue.push(neighbour[1]);
-				});
-			}
-
-			console.log(coordinates);
-			setCluster(coordinates);
 		});
 	}, []);
 

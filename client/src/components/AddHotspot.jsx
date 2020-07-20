@@ -113,24 +113,56 @@ function AddHotspot() {
 								value={node2}
 							/>
 						</FormGroup>
-						<FormGroup>
-							<Label for="neighbour" className="left-align">
-								Select the hotspot neighbour
-							</Label>
-							<Input type="select" name="neighbour" id="neighbour" onChange={handleNode1}>
-								<option>--Select--</option>
-								{cluster.map((node) => <option key={node.name}>{node.name}</option>)}
-							</Input>
-						</FormGroup>
-						<FormGroup>
-							<Label for="neighbourEdge" className="left-align">
-								Select the edge of the neighbour
-							</Label>
-							<Input type="select" name="neighbourEdge" id="neighbourEdge" onChange={handleEdges}>
-								<option>--Select--</option>
-								{availableEdges.map((edge) => <option>{edge}</option>)}
-							</Input>
-						</FormGroup>
+						{cluster.length === 0 ? (
+							<FormGroup>
+								<Label for="newNode2" className="left-align">
+									Enter the name of the 2nd hotspot
+								</Label>
+								<Input
+									required
+									type="text"
+									name="newNode2"
+									id="newNode2"
+									placeholder="2nd hotspot name"
+									onChange={(event) => {
+										setNode1(event.target.value);
+									}}
+									value={node1}
+								/>
+							</FormGroup>
+						) : (
+							<FormGroup>
+								<Label for="neighbour" className="left-align">
+									Select the hotspot neighbour
+								</Label>
+								<Input type="select" name="neighbour" id="neighbour" onChange={handleNode1}>
+									<option>--Select--</option>
+									{cluster.map((node) => <option key={node.name}>{node.name}</option>)}
+								</Input>
+							</FormGroup>
+						)}
+
+						{cluster.length === 0 ? (
+							<FormGroup>
+								<Label for="neighbourEdge" className="left-align">
+									Select the edge of the 2nd hotspot
+								</Label>
+								<Input type="select" name="neighbourEdge" id="neighbourEdge" onChange={handleEdges}>
+									<option>--Select--</option>
+									{[ ...Array(6) ].map((edge, index) => <option>{index}</option>)}
+								</Input>
+							</FormGroup>
+						) : (
+							<FormGroup>
+								<Label for="neighbourEdge" className="left-align">
+									Select the edge of the neighbour
+								</Label>
+								<Input type="select" name="neighbourEdge" id="neighbourEdge" onChange={handleEdges}>
+									<option>--Select--</option>
+									{availableEdges.map((edge) => <option>{edge}</option>)}
+								</Input>
+							</FormGroup>
+						)}
 					</Form>
 				</ModalBody>
 				<ModalFooter>
