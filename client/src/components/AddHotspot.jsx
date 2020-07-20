@@ -134,7 +134,7 @@ function AddHotspot() {
 					</Form>
 				</ModalBody>
 				<ModalFooter>
-					<Button color="primary" onClick={() => handleAddHotspot()}>
+					<Button color="primary" onClick={handleAddHotspot}>
 						Add Hotspot
 					</Button>{' '}
 					<Button color="secondary" onClick={toggle}>

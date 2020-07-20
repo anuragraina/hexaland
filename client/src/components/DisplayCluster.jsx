@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { HexGrid, Layout, Hexagon, Text } from 'react-hexgrid';
 
+import DeleteHotspot from './DeleteHotspot';
+
 const getCoordinates = (x, y, idx) => {
 	switch (idx) {
 		case 0:
@@ -22,8 +24,11 @@ const getCoordinates = (x, y, idx) => {
 };
 
 function DisplayCluster() {
-	//const [ nodes, setNodes ] = useState([]);
 	const [ cluster, setCluster ] = useState({});
+	const [ deleteNode, setDeleteNode ] = useState('');
+
+	const [ modal, setModal ] = useState(false);
+	const toggle = () => setModal(!modal);
 
 	useEffect(() => {
 		axios.get('/api/hexaland').then((response) => {
@@ -84,13 +89,23 @@ function DisplayCluster() {
 					{Object.keys(cluster).map((node) => {
 						const [ x, y ] = cluster[node];
 						return (
-							<Hexagon key={node} q={x} r={y} s={0} onClick={null}>
+							<Hexagon
+								key={node}
+								q={x}
+								r={y}
+								s={0}
+								onClick={() => {
+									setDeleteNode(node);
+									toggle();
+								}}
+							>
 								<Text>{node}</Text>
 							</Hexagon>
 						);
 					})}
 				</Layout>
 			</HexGrid>
+			<DeleteHotspot modal={modal} toggle={toggle} node={deleteNode} />
 		</div>
 	);
 }
