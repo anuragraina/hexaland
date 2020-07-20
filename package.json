@@ -5,6 +5,9 @@
 	"main": "server.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
+		"install-client": "cd client && npm install",
+		"build": "cd client && npm run build",
+		"heroku-postbuild": "npm run install-client && npm run build",
 		"start": "node server.js",
 		"client": "cd client && npm start",
 		"dev": "concurrently -n 'server,client' -c 'magenta,cyan' \"nodemon server.js\" \"npm run client\""
