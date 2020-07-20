@@ -1,7 +1,6 @@
 const express = require('express'),
 	morgan = require('morgan'),
-	hexalandRoute = require('./routes/hexaland'),
-	path = require('path');
+	hexalandRoute = require('./routes/hexaland');
 
 const connectDB = require('./config/db');
 

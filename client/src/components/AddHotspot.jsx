@@ -11,8 +11,10 @@ function AddHotspot() {
 	const [ node2, setNode2 ] = useState('');
 	const [ edge2, setEdge2 ] = useState('');
 
+	//function to toggle modal display
 	const toggle = () => setModal(!modal);
 
+	//get node object by passing name
 	const getNode = (nodeName) => {
 		for (const node of cluster) {
 			if (node.name === nodeName) {
@@ -21,6 +23,7 @@ function AddHotspot() {
 		}
 	};
 
+	//check if the node with the given name exists
 	const nodeExists = (nodeName) => {
 		for (const node of cluster) {
 			if (node.name === nodeName) {
@@ -31,6 +34,7 @@ function AddHotspot() {
 		return false;
 	};
 
+	//obtain cluster
 	useEffect(() => {
 		axios.get('/api/hexaland').then((response) => {
 			const clusterData = Object.values(response.data);
@@ -38,6 +42,7 @@ function AddHotspot() {
 		});
 	}, []);
 
+	//function to check the available edges for the node
 	const handleNode1 = (event) => {
 		if (event.target.value !== '--Select--') {
 			let arr = [ 0, 1, 2, 3, 4, 5 ];
@@ -52,6 +57,7 @@ function AddHotspot() {
 		}
 	};
 
+	//allot edge to new node
 	const handleEdges = (event) => {
 		if (event.target.value !== '--Select--') {
 			const edge = parseInt(event.target.value);
@@ -61,6 +67,7 @@ function AddHotspot() {
 		}
 	};
 
+	//post request sent to server after validating data
 	const handleAddHotspot = () => {
 		if (node1 === '' || edge1 === '' || node2 === '' || edge2 === '') {
 			alert('Invalid response!!!');
@@ -113,6 +120,8 @@ function AddHotspot() {
 								value={node2}
 							/>
 						</FormGroup>
+
+						{/* check for empty data (initial case when database is empty) */}
 						{cluster.length === 0 ? (
 							<FormGroup>
 								<Label for="newNode2" className="left-align">

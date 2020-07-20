@@ -4,6 +4,7 @@ import { HexGrid, Layout, Hexagon, Text } from 'react-hexgrid';
 
 import DeleteHotspot from './DeleteHotspot';
 
+//obtain coordinates of the nodes
 const getCoordinates = (x, y, idx) => {
 	switch (idx) {
 		case 0:
@@ -30,59 +31,68 @@ function DisplayCluster() {
 	const [ modal, setModal ] = useState(false);
 	const toggle = () => setModal(!modal);
 
+	//fetch the cluster from the server
 	useEffect(() => {
-		axios.get('/api/hexaland').then((response) => {
-			//handle catch
-			const clusterData = Object.values(response.data);
-			if (clusterData.length === 0) {
-				alert('No hotspot present!!!');
-			} else {
-				let center = [ '', -1 ];
+		axios
+			.get('/api/hexaland')
+			.then((response) => {
+				//conerting object to an array
+				const clusterData = Object.values(response.data);
 
-				const getNode = (nodeName) => {
+				if (clusterData.length === 0) {
+					alert('No hotspot present!!!');
+				} else {
+					let center = [ '', -1 ];
+
+					const getNode = (nodeName) => {
+						for (const node of clusterData) {
+							if (node.name === nodeName) {
+								return node;
+							}
+						}
+					};
+
+					//iterate over objects to get the central node
 					for (const node of clusterData) {
-						if (node.name === nodeName) {
-							return node;
+						const name = node.name;
+						const neighboursCount = Object.keys(node.neighbours).length;
+
+						if (neighboursCount > center[1]) {
+							center = [ name, neighboursCount ];
 						}
 					}
-				};
 
-				for (const node of clusterData) {
-					const name = node.name;
-					const neighboursCount = Object.keys(node.neighbours).length;
+					const coordinates = {
+						[center[0]]: [ 0, 0 ]
+					};
 
-					if (neighboursCount > center[1]) {
-						center = [ name, neighboursCount ];
+					const queue = [ center[0] ];
+					const visitedNodes = [ center[0] ];
+
+					//assigning coordinates to neighbours
+					while (queue.length !== 0) {
+						const nodeName = queue.shift();
+						const neighbours = Object.entries(getNode(nodeName).neighbours);
+						const [ baseX, baseY ] = coordinates[nodeName];
+
+						neighbours.forEach((neighbour) => {
+							if (!neighbour || visitedNodes.includes(neighbour[1])) {
+								return;
+							}
+
+							visitedNodes.push(neighbour[1]);
+							coordinates[neighbour[1]] = getCoordinates(baseX, baseY, parseInt(neighbour[0]));
+							queue.push(neighbour[1]);
+						});
 					}
+
+					console.log(coordinates);
+					setCluster(coordinates);
 				}
-
-				const coordinates = {
-					[center[0]]: [ 0, 0 ]
-				};
-
-				const queue = [ center[0] ];
-				const visitedNodes = [ center[0] ];
-
-				while (queue.length !== 0) {
-					const nodeName = queue.shift();
-					const neighbours = Object.entries(getNode(nodeName).neighbours);
-					const [ baseX, baseY ] = coordinates[nodeName];
-
-					neighbours.forEach((neighbour) => {
-						if (!neighbour || visitedNodes.includes(neighbour[1])) {
-							return;
-						}
-
-						visitedNodes.push(neighbour[1]);
-						coordinates[neighbour[1]] = getCoordinates(baseX, baseY, parseInt(neighbour[0]));
-						queue.push(neighbour[1]);
-					});
-				}
-
-				console.log(coordinates);
-				setCluster(coordinates);
-			}
-		});
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	}, []);
 
 	return (
