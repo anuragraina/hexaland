@@ -12,7 +12,7 @@ To setup the application, install required dependencies by running the following
 ### `npm install`
 
 Installs the required dependencies.<br />
-**Note: Enter the command twice, the current and then the client directory.**
+**Note: Enter the command twice, in the current directory and then the client directory.**
 
 
 Finally, to start the application, simply run:
