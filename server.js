@@ -1,6 +1,7 @@
 const express = require('express'),
 	morgan = require('morgan'),
-	hexalandRoute = require('./routes/hexaland');
+	hexalandRoute = require('./routes/hexaland'),
+	path = require('path');
 
 const connectDB = require('./config/db');
 
@@ -14,9 +15,13 @@ app.use(express.json({ extended: false }));
 
 app.use('/api', hexalandRoute);
 
-if (process.env.NODE_ENV === 'production') {
-	app.use(express.static('client/build'));
-}
+app.use(express.static(path.join(__dirname, './client/build')));
+
+app.get('*', function (_, res) {
+	res.sendFile(path.join(__dirname, './client/build/index.html'), function (err) {
+		res.status(500).send(err);
+	});
+});
 
 app.listen(PORT, () => {
 	console.log(`Server listening on PORT ${PORT}`);
